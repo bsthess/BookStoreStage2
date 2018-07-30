@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="gr.xryalithes.bookstorestage2.DetailsActivity">
+    <item
+        android:id="@+id/action_done"
+        android:title="Done"
+        android:icon="@drawable/icons8_checked_checkbox_96"
+        app:showAsAction="always" />
+</menu>
