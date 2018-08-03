@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/green_light"
     android:orientation="vertical"
     android:padding="@dimen/activity_margin"
-    tools:context=".AddActivity"
-    android:background="@color/green_light">
+    tools:context=".AddActivity">
 
     <!-- Overview category -->
     <LinearLayout
@@ -18,26 +17,26 @@
 
         <!-- Label -->
         <TextView
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/marginRight"
             style="@style/font_title"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/edit_text_title"
-             />
-            <!-- Name field -->
-            <EditText
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/marginRight"
+            android:layout_weight="1"
+            android:text="@string/edit_text_title" />
+        <!-- Name field -->
+        <EditText
 
-                android:layout_marginRight="@dimen/marginRight"
-                android:layout_width="280dp"
-                android:maxLength="25"
-                android:id="@+id/edit_book_title"
-                android:hint="@string/hint_text_title"
-                android:inputType="textCapCharacters"
-                style="@style/EditorFieldStyle" />
+            android:id="@+id/edit_book_title"
+            style="@style/EditorFieldStyle"
+            android:layout_width="280dp"
+            android:layout_marginRight="@dimen/marginRight"
+            android:hint="@string/hint_text_title"
+            android:inputType="textCapCharacters"
+            android:maxLength="25" />
 
 
-        </LinearLayout>
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,22 +45,22 @@
         <!-- Label -->
         <TextView
             style="@style/font_title"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/edit_field_width"
-            android:text="@string/edit_text_price"
-            />
+            android:layout_height="wrap_content"
+            android:text="@string/edit_text_price" />
         <!-- Name field -->
         <EditText
-            android:layout_marginRight="@dimen/marginRight"
             android:id="@+id/edit_book_price"
             style="@style/EditorFieldStyle"
             android:layout_width="match_parent"
+            android:layout_marginRight="@dimen/marginRight"
             android:hint="@string/hint_text_price"
             android:inputType="number"
             android:maxLength="3" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,21 +69,21 @@
         <!-- Label -->
         <TextView
             style="@style/font_title"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/edit_field_width"
-            android:text="@string/edit_text_quantity"
-            />
+            android:layout_height="wrap_content"
+            android:text="@string/edit_text_quantity" />
         <!-- Name field -->
         <EditText
-            android:layout_marginRight="@dimen/marginRight"
-            android:maxLength="3"
             android:id="@+id/edit_book_quantity"
+            style="@style/EditorFieldStyle"
+            android:layout_marginRight="@dimen/marginRight"
             android:hint="@string/hint_text_quantity"
             android:inputType="number"
-            style="@style/EditorFieldStyle" />
+            android:maxLength="3" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,21 +93,21 @@
         <TextView
 
             style="@style/font_title"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/edit_field_width"
-            android:text="@string/edit_text_supplier_name"
-            />
+            android:layout_height="wrap_content"
+            android:text="@string/edit_text_supplier_name" />
         <!-- Name field -->
         <EditText
-            android:layout_marginRight="@dimen/marginRight"
-            android:maxLength="25"
             android:id="@+id/edit_supplier_name"
+            style="@style/EditorFieldStyle"
+            android:layout_marginRight="@dimen/marginRight"
             android:hint="@string/hint_supplier_name"
             android:inputType="textCapWords"
-            style="@style/EditorFieldStyle" />
+            android:maxLength="25" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,20 +117,19 @@
         <TextView
 
             style="@style/font_title"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/edit_field_width"
-            android:text="@string/edit_text_suppliers_phone"
-            />
+            android:layout_height="wrap_content"
+            android:text="@string/edit_text_suppliers_phone" />
         <!-- Name field -->
         <EditText
-            android:layout_marginRight="@dimen/marginRight"
-            android:maxLength="10"
             android:id="@+id/edit_supplier_phone"
+            style="@style/EditorFieldStyle"
+            android:layout_marginRight="@dimen/marginRight"
             android:hint="@string/hint_supplier_phone"
             android:inputType="phone"
-            style="@style/EditorFieldStyle" />
+            android:maxLength="10" />
 
 
     </LinearLayout>
-    </LinearLayout>
+</LinearLayout>
 

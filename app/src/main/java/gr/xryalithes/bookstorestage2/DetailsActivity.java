@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -28,7 +27,7 @@ import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
 
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
+//initialize variables and views
     private static final int MAXIMUM_ALLOWED_QUANTITY = 100;
     private static final int MINIMUM_ALLOWED_QUANTITY = 0;
     private static final int EXISTING_BOOK_LOADER = 0;
@@ -51,10 +50,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         setTitle(getString(R.string.details_activity_title));
+        //get the uri from selected list view item in main activity,
         Intent intent = getIntent();
         mCurrentBookUri = intent.getData();
+        //start the loader!
         getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
-
+        
+//setting the views and buttons
         mTitleTextView = findViewById(R.id.edit_book_title);
         mPriceTextView = findViewById(R.id.edit_book_price);
         mQuantityTextView = findViewById(R.id.edit_book_quantity);
@@ -81,7 +83,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 decreaseQuantity();
             }
         });
-
+        
+//clicking the edit button,triggers the edit activity,passing by the item's  uri to edit
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +93,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-
+//clicking the delete button,triggers the showDeleteConfirmationDialog() that warn us about deletion
         deleteButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -98,6 +101,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 showDeleteConfirmationDialog();
             }
         });
+        
+        //clicking the call button, triggers the call action,passing as calling number the supplier telephone number
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,9 +117,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             }
         });
     }
-
+    
+//  pressing  the  quantity increase button triggers this
     private void increaseQuantity() {
         int quantity = Integer.parseInt(mQuantityTextView.getText().toString());
+        //if quantity is under maximum allowed, then do increase it.
         if (quantity <MAXIMUM_ALLOWED_QUANTITY) {
             quantity++;
             String quantityChanged = String.valueOf(quantity);
@@ -122,13 +129,15 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 Toast.makeText(DetailsActivity.this,R.string.quantity_increased, Toast.LENGTH_SHORT).show();
             }
         } else {
-
+            //else quantity increase is not possible
             Toast.makeText(DetailsActivity.this,R.string.quantity_maximum_message, Toast.LENGTH_SHORT).show();
 
         }
     }
+    //pressing the quantity decrease button triggers this
     private void decreaseQuantity() {
         int quantity = Integer.parseInt(mQuantityTextView.getText().toString());
+        //if quantity is bigger than minimum allowed then do decrease
         if (quantity > MINIMUM_ALLOWED_QUANTITY) {
             quantity--;
             String quantityChanged = String.valueOf(quantity);
@@ -136,17 +145,18 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 Toast.makeText(DetailsActivity.this,R.string.quantity_decreased, Toast.LENGTH_SHORT).show();
             }
         } else {
-
+//quantity decrease is not possible
             Toast.makeText(DetailsActivity.this,R.string.quantity_minimum_message, Toast.LENGTH_SHORT).show();
         }
 
     }
+    //update the quantity and return result
     private boolean quantityIsUpdated(String updatedQuantity) {
         //////////////////////////////////////////////////////////////////////////////////////////
         ContentValues values = new ContentValues();
         values.put(BookData.COLUMN_BOOK_QUANTITY, updatedQuantity);
         int rowsUpdated = getContentResolver().update(mCurrentBookUri, values, null, null);
-
+//if the rows updated is 0 then show fail message
         if (rowsUpdated == 0) {
             Toast.makeText(this, getString(R.string.quantity_not_updated),
                     Toast.LENGTH_SHORT).show();
@@ -162,14 +172,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
+                // User clicked the "Delete" button, so delete the book.
                 deleteBook();
             }
         });
         builder.setNegativeButton(R.string.cancel_delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the book.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -183,11 +193,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private void deleteBook() {
 
         int rowsDeleted = 0;
-        // Only perform the delete if this is an existing pet.
+        // Only perform the delete if this is an existing book.
         if (mCurrentBookUri != null) {
-            // Call the ContentResolver to delete the pet at the given content URI.
-            // Pass in null for the selection and selection args because the mCurrentPetUri
-            // content URI already identifies the pet that we want.
+            //
             rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
         }
 

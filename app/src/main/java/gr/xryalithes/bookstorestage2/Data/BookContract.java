@@ -7,15 +7,15 @@ import android.provider.BaseColumns;
 /**
  * Created by Labis on 17/7/2018.
  */
-
+//the class with all the costants to use with database handling
 public class BookContract {
-
+//content authority
     public static final String CONTENT_AUTHORITY = "gr.xryalithes.bookstorestage2";
 
-
+//the base uri uppon to build all uris
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-
+//the path to books table
     public static final String PATH_BOOKS = "books";
 
     public static final class BookData implements BaseColumns {
@@ -35,6 +35,8 @@ public class BookContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BOOKS;
 
+
+        //the final variables for table,id and columns names
         public final static String TABLE_NAME = "books";
 
         public final static String _ID = BaseColumns._ID;

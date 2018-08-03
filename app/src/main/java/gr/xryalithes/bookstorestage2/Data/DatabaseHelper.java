@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
 
 /**
- * Database helper for Pets app. Manages database creation and version management.
+ * Object for the database handling.Creates database and handles the version number
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -20,14 +20,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "shelter.db";
 
     /**
-     * Database version. If you change the database schema, you must increment the database version.
+     * Database version number.
      */
     private static final int DATABASE_VERSION = 1;
 
     /**
-     * Constructs a new instance of {@link DatabaseHelper}.
-     *
-     * @param context of the app
+     Creating a new DatabaseHelper object
      */
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create a String that contains the SQL statement to create the pets table
+        // String concatenation with all the necessary column names for creating the books table.Including the type of data that every column should contain
         String SQL_CREATE_PETS_TABLE =  "CREATE TABLE " + BookData.TABLE_NAME + " ("
                 + BookData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + BookData.COLUMN_BOOK_TITLE + " TEXT NOT NULL, "
@@ -47,15 +45,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + BookData.COLUMN_SUPPLIER_NAME + " TEXT NOT NULL DEFAULT NAME, "
                 + BookData.COLUMN_SUPPLIER_PHONE + " LONG NOT NULL);";
 
-        // Execute the SQL statement
+        // Execute the SQL statement that creates the table!
         db.execSQL(SQL_CREATE_PETS_TABLE);
     }
 
     /**
-     * This is called when the database needs to be upgraded.
+     * When we need to update the database version,call this method
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // The database is still at version 1, so there's nothing to do be done here.
+        // nothing to do yet....
     }
 }

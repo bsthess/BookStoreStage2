@@ -3,6 +3,7 @@ package gr.xryalithes.bookstorestage2.Data;
 /**
  * Created by Λάμπης on 17/7/2018.
  */
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -11,21 +12,24 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
-
 import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
-
 import java.security.Provider;
-
 
 public class BookProvider extends ContentProvider {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = BookProvider.class.getSimpleName();
 
-    /** URI matcher code for the content URI for the pets table */
+    /**
+     * URI matcher code for the content URI for the books table
+     */
     private static final int BOOKS = 100;
 
-    /** URI matcher code for the content URI for a single pet in the pets table */
+    /**
+     * URI matcher code for the content URI for a single book in the books table
+     */
     private static final int BOOK_ID = 101;
 
     /**
@@ -35,30 +39,15 @@ public class BookProvider extends ContentProvider {
      */
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    // Static initializer. This is run the first time anything is called from this class.
     static {
-        // The calls to addURI() go here, for all of the content URI patterns that the provider
-        // should recognize. All paths added to the UriMatcher have a corresponding code to return
-        // when a match is found.
-
-        // The content URI of the form "content://com.example.android.pets/pets" will map to the
-        // integer code {@link #PETS}. This URI is used to provide access to MULTIPLE rows
-        // of the pets table.
         sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS, BOOKS);
-
-        // The content URI of the form "content://com.example.android.pets/pets/#" will map to the
-        // integer code {@link #PET_ID}. This URI is used to provide access to ONE single row
-        // of the pets table.
-        //
-        // In this case, the "#" wildcard is used where "#" can be substituted for an integer.
-        // For example, "content://com.example.android.pets/pets/3" matches, but
-        // "content://com.example.android.pets/pets" (without a number at the end) doesn't match.
         sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS + "/#", BOOK_ID);
     }
 
-    /** Database helper object */
+    /**
+     * Database helper object
+     */
     private DatabaseHelper mDbHelper;
-
     @Override
     public boolean onCreate() {
         mDbHelper = new DatabaseHelper(getContext());
@@ -70,23 +59,21 @@ public class BookProvider extends ContentProvider {
                         String sortOrder) {
         // Get readable database
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
-
-        // This cursor will hold the result of the query
+        // This cursor  has the content of the query results
         Cursor cursor;
-
         // Figure out if the URI matcher can match the URI to a specific code
         int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
-                // For the PETS code, query the pets table directly with the given
+                // For the BOOKS code, query the books table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
-                // could contain multiple rows of the pets table.
+                // could contain multiple rows of the books table.
                 cursor = database.query(BookData.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case BOOK_ID:
-                // For the PET_ID code, extract out the ID from the URI.
-                // For an example URI such as "content://com.example.android.pets/pets/3",
+                // For the BOOK_ID code, extract out the ID from the URI.
+                // For an example URI such as "content://com.example.android.books/books/3",
                 // the selection will be "_id=?" and the selection argument will be a
                 // String array containing the actual ID of 3 in this case.
                 //
@@ -94,9 +81,9 @@ public class BookProvider extends ContentProvider {
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = BookData._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
-                // This will perform a query on the pets table where the _id equals 3 to return a
+                // This will perform a query on the BOOKs table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
                 cursor = database.query(BookData.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
@@ -104,16 +91,13 @@ public class BookProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
-
         // Set notification URI on the Cursor,
         // so we know what content URI the Cursor was created for.
         // If the data at this URI changes, then we know we need to update the Cursor.
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
         // Return the cursor
         return cursor;
     }
-
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
         final int match = sUriMatcher.match(uri);
@@ -124,9 +108,8 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
     }
-
     /**
-     * Insert a pet into the database with the given content values. Return the new content URI
+     * Insert a book into the database with the given content values. Return the new content URI
      * for that specific row in the database.
      */
     private Uri insertBook(Uri uri, ContentValues values) {
@@ -135,27 +118,26 @@ public class BookProvider extends ContentProvider {
         if (title == null) {
             throw new IllegalArgumentException("Book title missing");
         }
-
         // Check that the price is valid
         Integer price = values.getAsInteger(BookData.COLUMN_BOOK_PRICE);
-        if (price == null ) {
+        if (price == null) {
             throw new IllegalArgumentException("Price cannot be null");
         }
-
         //  check that quantity it's greater than 0 and not negative
         Integer quantity = values.getAsInteger(BookData.COLUMN_BOOK_PRICE);
         if (quantity != null && quantity < 0) {
             throw new IllegalArgumentException("Book quantity must be greater than zero");
         }
-        String  supplierName = values.getAsString(BookData.COLUMN_BOOK_TITLE);
+        //check that supplier name is not null
+        String supplierName = values.getAsString(BookData.COLUMN_BOOK_TITLE);
         if (supplierName == null) {
             throw new IllegalArgumentException("Supplier name is  missing");
         }
+        //check that supplier phone is not negative
         String supplierPhone = values.getAsString(BookData.COLUMN_BOOK_TITLE);
         if (supplierPhone == null) {
             throw new IllegalArgumentException("Supplier phone is  missing");
         }
-
         // Get writeable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -166,8 +148,7 @@ public class BookProvider extends ContentProvider {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
         }
-
-        // Notify all listeners that the data has changed for the pet content URI
+        // Notify all listeners that the data has changed for the book content URI
         getContext().getContentResolver().notifyChange(uri, null);
 
         // Return the new URI with the ID (of the newly inserted row) appended at the end
@@ -186,7 +167,7 @@ public class BookProvider extends ContentProvider {
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = BookData._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateBook(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -194,9 +175,7 @@ public class BookProvider extends ContentProvider {
     }
 
     /**
-     * Update pets in the database with the given content values. Apply the changes to the rows
-     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
-     * Return the number of rows that were successfully updated.
+     * Update the books with the values object according the selection and selection arguments.If rows updated successfuly,return the number of rows.
      */
     private int updateBook(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
@@ -207,16 +186,15 @@ public class BookProvider extends ContentProvider {
             }
         }
 
-        // If the {@link BookData#COLUMN_PET_GENDER} key is present,
-        // check that the gender value is valid.
+        // if the values object contains a valid key BOOK_PRICE,set an integer variable for price.
         if (values.containsKey(BookData.COLUMN_BOOK_PRICE)) {
             Integer price = values.getAsInteger(BookData.COLUMN_BOOK_PRICE);
-            if (price == null || price <=0) {
+            if (price == null || price <= 0) {
                 throw new IllegalArgumentException("Book must have a valid price");
             }
         }
 
-
+// if the values object contains a valid key BOOK_QUANTITY,set an integer variable for quantity.
         if (values.containsKey(BookData.COLUMN_BOOK_QUANTITY)) {
 
             Integer quantity = values.getAsInteger(BookData.COLUMN_BOOK_QUANTITY);
@@ -224,13 +202,15 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalArgumentException("Book quantity invalid value");
             }
         }
+        // if the values object contains a valid key for supplier name ,set a string variable for it.
         if (values.containsKey(BookData.COLUMN_SUPPLIER_NAME)) {
 
             String supplierName = values.getAsString(BookData.COLUMN_SUPPLIER_NAME);
-            if (supplierName == null ) {
+            if (supplierName == null) {
                 throw new IllegalArgumentException("Supplier Name needed");
             }
         }
+        // if the values object contains a valid key for supplier_phone,set a string variable for it.
         if (values.containsKey(BookData.COLUMN_SUPPLIER_PHONE)) {
 
             String supplierPhone = values.getAsString(BookData.COLUMN_SUPPLIER_PHONE);
@@ -243,10 +223,10 @@ public class BookProvider extends ContentProvider {
             return 0;
         }
 
-        // Otherwise, get writeable database to update the data
+        //  get writeable database object to update the data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        // Perform the update on the database and get the number of rows affected
+        // Update the rows in database and return the updated rows.
         int rowsUpdated = database.update(BookData.TABLE_NAME, values, selection, selectionArgs);
 
         // If 1 or more rows were updated, then notify all listeners that the data at the
@@ -261,7 +241,7 @@ public class BookProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Get writeable database
+        // Get writeable database object
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         // Track the number of rows that were deleted
@@ -276,7 +256,7 @@ public class BookProvider extends ContentProvider {
             case BOOK_ID:
                 // Delete a single row given by the ID in the URI
                 selection = BookData._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(BookData.TABLE_NAME, selection, selectionArgs);
                 break;
             default:

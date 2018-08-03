@@ -21,12 +21,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
 
 public class AddActivity extends AppCompatActivity {
-
+    //initialization of variables and views
     private static final int MAXIMUM_ALLOWED_PRICE = 100;
     private static final int MINIMUM_ALLOWED_PRICE = 1;
     private EditText mTitleEditText;
@@ -35,7 +33,7 @@ public class AddActivity extends AppCompatActivity {
     private EditText mSupplierNameEditText;
     private EditText mSupplierPhoneEditText;
     private boolean mBookHasChanged = false;
-
+    //listener for touched views.If touched any,mBookHasChanged is true
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent Event) {
@@ -46,6 +44,7 @@ public class AddActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
+    //creating the activity.Declare the views and set touchlistener on them.Set the title of the activity.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
@@ -64,6 +63,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     @Override
+    //create menu
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_add_, menu);
@@ -71,21 +71,22 @@ public class AddActivity extends AppCompatActivity {
     }
 
     @Override
+    //what happens if menu items selected
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
+            //if we select save then call dataValidation method
             case R.id.action_save:
                 dataValidation();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // If the book hasn't changed, continue with navigating up to parent activity
-                // which is the {@link CatalogActivity}.
+
                 if (!mBookHasChanged) {
                     NavUtils.navigateUpFromSameTask(AddActivity.this);
                     return true;
                 }
-
                 // Otherwise if there are unsaved changes, setup a dialog to warn the user.
                 // Create a click listener to handle the user confirming that
                 // changes should be discarded.
@@ -105,32 +106,35 @@ public class AddActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //this method validates the data inserted by the user.
     public void dataValidation() {
         String titleString = mTitleEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityTextView.getText().toString().trim();
         String supplierName = mSupplierNameEditText.getText().toString().trim();
         String supplierPhone = mSupplierPhoneEditText.getText().toString().trim();
-        if (
-                TextUtils.isEmpty(titleString) && TextUtils.isEmpty(priceString) &&
-                        TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierName) && TextUtils.isEmpty(supplierPhone)) {
+        //if all the fields are empty, no need to go further.
+        if (TextUtils.isEmpty(titleString) && TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierName) && TextUtils.isEmpty(supplierPhone)) {
             Toast.makeText(this, getString(R.string.no_data_to_save),
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        //Check every field with its own validation method, if all the fields have valid data inserted,
+        // then procceed to add book to database  with (addBook() method )
         if (titleIsValid(titleString) && priceIsValid(priceString) && quantityIsValid(quantityString) &&
                 supplierNameIsValid(supplierName) && supplierPhoneIsValid(supplierPhone)) {
             addBook();
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////
+    ////////////////DATA VALIDATION METHODS////////////////////////////////////////////////////////
+    // check title
     private boolean titleIsValid(String title) {
         if (title.isEmpty()) {
             Toast.makeText(this, getString(R.string.edit_text_title_empty),
                     Toast.LENGTH_SHORT).show();
             return false;
         }
+        // maximum title length is 25 characters
         if (title.length() > 25) {
             mTitleEditText.setText("");
             Toast.makeText(this, getString(R.string.edit_text_title_maximum_characters),
@@ -140,7 +144,7 @@ public class AddActivity extends AppCompatActivity {
         return true;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////
+    //check price
     private boolean priceIsValid(String price) {
         if (price.isEmpty()) {
             Toast.makeText(AddActivity.this, R.string.price_not_allowed_msg, Toast.LENGTH_SHORT).show();
@@ -148,6 +152,7 @@ public class AddActivity extends AppCompatActivity {
             return false;
         } else {
             int priceInteger = Integer.parseInt(price);
+            // price is valid between 0 and 100
             if (priceInteger <= 0) {
                 Toast.makeText(AddActivity.this, R.string.price_minimum_msg, Toast.LENGTH_SHORT).show();
                 mPriceEditText.setText(String.valueOf(MINIMUM_ALLOWED_PRICE));
@@ -162,7 +167,7 @@ public class AddActivity extends AppCompatActivity {
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //check quantity
     private boolean quantityIsValid(String quantity) {
 
         if (quantity.isEmpty()) {
@@ -170,6 +175,7 @@ public class AddActivity extends AppCompatActivity {
             return false;
         } else {
             int quantityInteger = Integer.parseInt(mQuantityTextView.getText().toString());
+            // quantity must be between 0 and 100
             if (quantityInteger > 100 || quantityInteger < 0) {
                 Toast.makeText(AddActivity.this, R.string.quantity_limits_msg, Toast.LENGTH_SHORT).show();
                 return false;
@@ -178,12 +184,13 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //check supplier name
     private boolean supplierNameIsValid(String supplierName) {
         if (supplierName.isEmpty()) {
             Toast.makeText(AddActivity.this, R.string.supplier_name_empty_msg, Toast.LENGTH_SHORT).show();
             return false;
         } else {
+            //supplier name must have 25 characters maximum
             if (supplierName.length() > 25) {
                 Toast.makeText(AddActivity.this, R.string.supplier_name_max_25_char_msg, Toast.LENGTH_SHORT).show();
                 return false;
@@ -192,12 +199,13 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    //check supplier phone
     private boolean supplierPhoneIsValid(String supplierPhone) {
         if (supplierPhone.isEmpty()) {
             Toast.makeText(AddActivity.this, R.string.supplier_phone_empty_msg, Toast.LENGTH_SHORT).show();
             return false;
         } else {
+            //telephone number must have 10 digits
             if (supplierPhone.length() < 10) {
                 Toast.makeText(AddActivity.this, R.string.supplier_phone_10_digits_msg, Toast.LENGTH_SHORT).show();
                 return false;
@@ -210,20 +218,20 @@ public class AddActivity extends AppCompatActivity {
      * Get user input from editor and save book into database.
      */
     private void addBook() {
-
+//get the strings from editText views
         String titleString = mTitleEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityTextView.getText().toString().trim();
         String supplierName = mSupplierNameEditText.getText().toString().trim();
         String supplierPhone = mSupplierPhoneEditText.getText().toString().trim();
-        //////////////////////////////////////////////////////////////////////////////////////////
+        //create the ContentValues object to insert
         ContentValues values = new ContentValues();
         values.put(BookData.COLUMN_BOOK_TITLE, titleString);
         values.put(BookData.COLUMN_BOOK_PRICE, priceString);
         values.put(BookData.COLUMN_BOOK_QUANTITY, quantityString);
         values.put(BookData.COLUMN_SUPPLIER_NAME, supplierName);
         values.put(BookData.COLUMN_SUPPLIER_PHONE, supplierPhone);
-
+//execute the sql command for inserting data to database using values object
         Uri savedUri = getContentResolver().insert(BookData.CONTENT_URI, values);
 
         // Show a toast message depending on whether or not the insertion was successful.

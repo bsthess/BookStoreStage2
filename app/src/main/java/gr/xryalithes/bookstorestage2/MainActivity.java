@@ -23,10 +23,10 @@ import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+//variable for the loader id
+    private static final int BOOK_LOADER = 0;
 
-    private static final int PET_LOADER = 0;
-
-
+//create new object for cursor adapter
     BookCursorAdapter mCursorAdapter;
 
     @Override
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+//the floating button for adding new book
         FloatingActionButton fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,18 +44,19 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
+//list view for showing items
         ListView bookListView =  findViewById(R.id.book_list);
-
+//setting the empty view image
         View emptyView = findViewById(R.id.empty_view);
         bookListView.setEmptyView(emptyView);
-
+//creating the adapter and attach to list view
         mCursorAdapter = new BookCursorAdapter(this, null);
         bookListView.setAdapter(mCursorAdapter);
+        //set click listener to list view.
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
+                //clicking on a list item,triggers the details activity,passing the item's uri for use in editor and database updating
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 Uri currentBookUri = ContentUris.withAppendedId(BookData.CONTENT_URI, id);
                 intent.setData(currentBookUri);
@@ -63,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
-        getLoaderManager().initLoader(PET_LOADER, null, this);
+//start the loader
+        getLoaderManager().initLoader(BOOK_LOADER, null, this);
     }
 
 
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Update {@link PetCursorAdapter} with this new cursor containing updated pet data
+        
         mCursorAdapter.swapCursor(data);
     }
 

@@ -1,7 +1,6 @@
 package gr.xryalithes.bookstorestage2;
 
 import android.app.LoaderManager;
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,7 +13,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +28,7 @@ import android.widget.Toast;
 import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
 
 public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    //initialize views and variabels
     private static final int EXISTING_BOOK_LOADER = 0;
     private static final int MAXIMUM_ALLOWED_PRICE = 100;
     private static final int MINIMUM_ALLOWED_PRICE = 1;
@@ -41,6 +40,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean mBookHasChanged = false;
     private Uri mCurrentBookUri;
 
+//listener for touching the views
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent Event) {
@@ -55,12 +55,12 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         setTitle(getString(R.string.edit_activity_title));
-
+//get the current book uri from main activity
         Intent intent = getIntent();
         mCurrentBookUri = intent.getData();
-
+//start the loader
        getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
-
+//set the views and touchlisteners
         mTitleEditText = findViewById(R.id.edit_book_title);
         mPriceEditText = findViewById(R.id.edit_book_price);
         mQuantityTextView = findViewById(R.id.edit_book_quantity);
@@ -112,7 +112,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // User clicked "Discard" button, navigate to parent activity.
+                                // if discard selected, finish activity
                                 finish();
                             }
                         };
@@ -123,31 +123,35 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         return super.onOptionsItemSelected(item);
     }
-
+    //this method validates the data inserted by the user.
     public void dataValidation() {
         String titleString = mTitleEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityTextView.getText().toString().trim();
         String supplierName = mSupplierNameEditText.getText().toString().trim();
         String supplierPhone = mSupplierPhoneEditText.getText().toString().trim();
+        //if all the fields are empty, no need to go further.
         if (
                 TextUtils.isEmpty(titleString) && TextUtils.isEmpty(priceString) &&
                         TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierName) && TextUtils.isEmpty(supplierPhone)) {
             return;
         }
+        //Check every field with its own validation method, if all the fields have valid data inserted,
+        // then procceed to add book to database  with (addBook() method )
         if (titleIsValid(titleString) && priceIsValid(priceString) && quantityIsValid(quantityString) &&
                 supplierNameIsValid(supplierName) && supplierPhoneIsValid(supplierPhone)) {
             editBook();
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////
+ //check title
     private boolean titleIsValid(String title) {
         if (title.isEmpty()) {
             Toast.makeText(this, getString(R.string.edit_text_title_empty),
                     Toast.LENGTH_SHORT).show();
             return false;
         }
+        // maximum title length is 25 characters
         if (title.length() > 25) {
             mTitleEditText.setText("");
             Toast.makeText(this, getString(R.string.edit_text_title_maximum_characters),
@@ -157,7 +161,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////
+    //check price
     private boolean priceIsValid(String price) {
         if (price.isEmpty()) {
             Toast.makeText(EditActivity.this, R.string.price_not_allowed_msg, Toast.LENGTH_SHORT).show();
@@ -165,6 +169,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             return false;
         } else {
             int priceInteger = Integer.parseInt(price);
+            //price must be bewtween 0-100
             if (priceInteger <= 0) {
                 Toast.makeText(EditActivity.this, R.string.price_minimum_msg, Toast.LENGTH_SHORT).show();
                 mPriceEditText.setText(String.valueOf(MINIMUM_ALLOWED_PRICE));
@@ -179,7 +184,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+   //check quantity
     private boolean quantityIsValid(String quantity) {
 
         if (quantity.isEmpty()) {
@@ -187,6 +192,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             return false;
         } else {
             int quantityInteger = Integer.parseInt(mQuantityTextView.getText().toString());
+            //quantity must be 0-100
             if (quantityInteger > 100 || quantityInteger < 0) {
                 Toast.makeText(EditActivity.this, R.string.quantity_limits_msg, Toast.LENGTH_SHORT).show();
                 return false;
@@ -195,7 +201,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+   //check supplier name
     private boolean supplierNameIsValid(String supplierName) {
         if (supplierName.isEmpty()) {
             Toast.makeText(EditActivity.this, R.string.supplier_name_empty_msg, Toast.LENGTH_SHORT).show();
@@ -209,12 +215,14 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+   //check supplier phone
     private boolean supplierPhoneIsValid(String supplierPhone) {
+        //null not accepted
         if (supplierPhone.isEmpty()) {
             Toast.makeText(EditActivity.this, R.string.supplier_phone_empty_msg, Toast.LENGTH_SHORT).show();
             return false;
         } else {
+            //telephone number must have 10 digits
             if (supplierPhone.length() < 10) {
                 Toast.makeText(EditActivity.this, R.string.supplier_phone_10_digits_msg, Toast.LENGTH_SHORT).show();
                 return false;
@@ -254,6 +262,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void showUnsavedBookDialog(
+            //dialog for user warning
             DialogInterface.OnClickListener discardButtonClickListener) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
