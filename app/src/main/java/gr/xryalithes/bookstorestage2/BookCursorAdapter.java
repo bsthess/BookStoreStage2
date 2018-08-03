@@ -77,7 +77,7 @@ public class BookCursorAdapter extends CursorAdapter {
             public void onClick(View view) {
                 int quantity = Integer.parseInt(bookQuantity);
 //if quantity is 0 then sale is not possible
-                if (quantity == 0) {
+                if (quantity <= 0) {
                     Toast.makeText(context, R.string.no_books_available, Toast.LENGTH_SHORT).show();
                     return;
                 }
