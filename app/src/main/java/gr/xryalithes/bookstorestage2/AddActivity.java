@@ -1,15 +1,12 @@
 package gr.xryalithes.bookstorestage2;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -47,7 +44,7 @@ public class AddActivity extends AppCompatActivity {
     //creating the activity.Declare the views and set touchlistener on them.Set the title of the activity.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
+        setContentView(R.layout.add_edit_activity);
         setTitle(getString(R.string.add_activity_title));
 
         mTitleEditText = findViewById(R.id.edit_book_title);

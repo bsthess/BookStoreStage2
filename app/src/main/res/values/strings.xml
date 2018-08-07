@@ -14,7 +14,7 @@
     <string name="hint_text_quantity">enter quantity here</string>
     <string name="edit_text_supplier_name">Supplier</string>
     <string name="hint_supplier_name">enter the suppliers name</string>
-    <string name="edit_text_suppliers_phone">Supplier phone</string>
+    <string name="edit_text_suppliers_phone">Supplier  phone</string>
     <string name="hint_supplier_phone">enter phone number</string>
     <string name="add_activity_title">Add a book</string>
     <string name="insert_book_failed">Error.Failed to add Book</string>
@@ -22,7 +22,7 @@
     <string name="discard">Discard</string>
     <string name="continue_insert">Continue inserting data</string>
     <string name="unsaved_book">Book is not saved.Exit screen?</string>
-    <string name="unsaved_changes">YOUR DATA IS NOT SAVED.DO YOU WANT TO EXIT?</string>
+    <string name="unsaved_changes">Your data is not saved.Do you want to quit?</string>
     <string name="details_activity_title">Book details</string>
     <string name="edited_book_failed">Book data edit failed</string>
     <string name="edited_book_success">Book data saved</string>
@@ -56,5 +56,6 @@
     <string name="quantity_not_updated">Error in quantity change</string>
     <string name="no_data_to_save">No data to save</string>
     <string name="edit_button">Edit</string>
-
+    <string name="Permission_to_phone_call_needed">Permission to phone call needed</string>
+<string name="call_canceled">Call canceled due to access restriction</string>
 </resources>

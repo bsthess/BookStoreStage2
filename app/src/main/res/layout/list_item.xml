@@ -1,89 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2016 The Android Open Source Project
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-          http://www.apache.org/licenses/LICENSE-2.0
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
---><!-- Layout for a single list item in the list of pets -->
+<?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/green_light"
-    android:orientation="horizontal">
+    android:layout_height="120dp"
+    android:background="@color/green_light">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <TextView
+        android:id="@+id/title_text_view"
+        style="@style/font_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layouts_margin"
+        tools:text="TITLE" />
+
+    <TextView
+        android:id="@+id/price_text_view"
+        style="@style/font_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_margin">
-
-        <LinearLayout
-            android:layout_width="270dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-
-            >
-
-            <TextView
-                android:id="@+id/title_text_view"
-                style="@style/font_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="TITLE" />
-
-            <TextView
-                android:id="@+id/price_text_view"
-                style="@style/font_small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="PRICE" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="270dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-
-            >
-
-            <TextView
-                android:id="@+id/quantity_text_view"
-                style="@style/font_small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="quantity" />
-
-            <TextView
-                android:id="@+id/quantity_title_text_view"
-                style="@style/font_small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="    in stock" />
-
-        </LinearLayout>
+        android:layout_below="@id/title_text_view"
+        android:layout_margin="@dimen/layouts_margin"
+        tools:text="PRICE" />
 
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/quantity_text_view"
+        style="@style/font_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_text_view"
+        android:layout_margin="@dimen/layouts_margin"
+        tools:text="quantity" />
+
+    <TextView
+        android:id="@+id/quantity_title_text_view"
+        style="@style/font_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_text_view"
+        android:layout_marginTop="@dimen/layouts_margin"
+        android:layout_toRightOf="@id/quantity_text_view"
+        android:text="    in stock" />
+
 
     <Button
         android:id="@+id/sale_button"
         style="@style/font_small_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="50dp"
-        android:layout_weight="1"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/quantity_title_text_view"
+        android:layout_alignEnd="@+id/title_text_view"
+        android:layout_alignRight="@+id/title_text_view"
         android:background="@android:color/background_light"
         android:focusable="false"
         android:text="SELL" />
 
-
-</LinearLayout>
+</RelativeLayout>

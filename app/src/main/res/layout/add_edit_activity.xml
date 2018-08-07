@@ -12,16 +12,14 @@
     <!-- Overview category -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="108dp"
+        android:orientation="vertical">
 
         <!-- Label -->
         <TextView
             style="@style/font_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/marginRight"
-            android:layout_weight="1"
             android:text="@string/edit_text_title" />
         <!-- Name field -->
         <EditText
@@ -45,7 +43,7 @@
         <!-- Label -->
         <TextView
             style="@style/font_title"
-            android:layout_width="@dimen/edit_field_width"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:text="@string/edit_text_price" />
         <!-- Name field -->
@@ -69,7 +67,7 @@
         <!-- Label -->
         <TextView
             style="@style/font_title"
-            android:layout_width="@dimen/edit_field_width"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:text="@string/edit_text_quantity" />
         <!-- Name field -->
@@ -93,7 +91,7 @@
         <TextView
 
             style="@style/font_title"
-            android:layout_width="@dimen/edit_field_width"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:text="@string/edit_text_supplier_name" />
         <!-- Name field -->
@@ -110,15 +108,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
 
             style="@style/font_title"
-            android:layout_width="@dimen/edit_field_width"
-            android:layout_height="wrap_content"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
             android:text="@string/edit_text_suppliers_phone" />
         <!-- Name field -->
         <EditText

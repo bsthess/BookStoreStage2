@@ -12,9 +12,9 @@
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@android:color/holo_green_dark</item>
+        <item name="android:background">@color/dark_green</item>
 
         <!-- Support library compatibility -->
-        <item name="background">@android:color/holo_green_dark</item>
+        <item name="background">@color/dark_green</item>
     </style>
 </resources>

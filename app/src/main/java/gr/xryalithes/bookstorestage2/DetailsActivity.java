@@ -14,7 +14,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -22,15 +24,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import gr.xryalithes.bookstorestage2.Data.BookContract.BookData;
 
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-//initialize variables and views
+    //initialize variables and views
     private static final int MAXIMUM_ALLOWED_QUANTITY = 100;
     private static final int MINIMUM_ALLOWED_QUANTITY = 0;
     private static final int EXISTING_BOOK_LOADER = 0;
+    private static final int PERMISSION_REQUEST_CODE = 77;
     public ImageButton quantityPlusButton;
     public ImageButton quantityMinusButton;
     private Uri mCurrentBookUri;
@@ -43,7 +45,6 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private Button editButton;
     private Button deleteButton;
 
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         mCurrentBookUri = intent.getData();
         //start the loader!
         getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
-        
+
 //setting the views and buttons
         mTitleTextView = findViewById(R.id.edit_book_title);
         mPriceTextView = findViewById(R.id.edit_book_price);
@@ -83,12 +84,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 decreaseQuantity();
             }
         });
-        
+
 //clicking the edit button,triggers the edit activity,passing by the item's  uri to edit
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DetailsActivity.this,EditActivity.class);
+                Intent intent = new Intent(DetailsActivity.this, EditActivity.class);
                 intent.setData(mCurrentBookUri);
                 startActivity(intent);
             }
@@ -101,7 +102,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 showDeleteConfirmationDialog();
             }
         });
-        
+
         //clicking the call button, triggers the call action,passing as calling number the supplier telephone number
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,31 +110,75 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 String telnumber = mSupplierPhoneTextView.getText().toString();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + telnumber));
-                if (ActivityCompat.checkSelfPermission(DetailsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                //check for permission
+                if (ContextCompat.checkSelfPermission(DetailsActivity.this,
+                        Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    // App must ask user for permission to handle phone calls
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(DetailsActivity.this,
+                            Manifest.permission.CALL_PHONE)) {
+                        // Show an explanation to the user *asynchronously* -- don't block
+                        // this thread waiting for the user's response! After the user
+                        // sees the explanation, try again to request the permission.
+                        Toast.makeText(DetailsActivity.this,R.string.Permission_to_phone_call_needed, Toast.LENGTH_SHORT).show();
+                    }
+                    ActivityCompat.requestPermissions(DetailsActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE}, PERMISSION_REQUEST_CODE);
+
+                } else {
+                    // Permission has already been granted
+                    startActivity(intent);
                 }
-                startActivity(intent);
 
             }
         });
+
     }
-    
-//  pressing  the  quantity increase button triggers this
-    private void increaseQuantity() {
-        int quantity = Integer.parseInt(mQuantityTextView.getText().toString());
-        //if quantity is under maximum allowed, then do increase it.
-        if (quantity <MAXIMUM_ALLOWED_QUANTITY) {
-            quantity++;
-            String quantityChanged = String.valueOf(quantity);
-            if (quantityIsUpdated(quantityChanged)){
-                Toast.makeText(DetailsActivity.this,R.string.quantity_increased, Toast.LENGTH_SHORT).show();
+
+    // Method for handling the answer of the user (giving or no permission to the app for phone calls)
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            String telnumber = mSupplierPhoneTextView.getText().toString();
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + telnumber));
+
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted,make the call
+                startActivity(intent);
+            } else {
+                // permission denied :(
+                Toast.makeText(DetailsActivity.this, R.string.call_canceled, Toast.LENGTH_SHORT).show();
             }
-        } else {
-            //else quantity increase is not possible
-            Toast.makeText(DetailsActivity.this,R.string.quantity_maximum_message, Toast.LENGTH_SHORT).show();
+            return;
 
         }
     }
+
+    //  pressing  the  quantity increase button triggers this
+    private void increaseQuantity() {
+        int quantity = Integer.parseInt(mQuantityTextView.getText().toString());
+        //if quantity is under maximum allowed, then do increase it.
+        if (quantity < MAXIMUM_ALLOWED_QUANTITY) {
+            quantity++;
+            String quantityChanged = String.valueOf(quantity);
+            if (quantityIsUpdated(quantityChanged)) {
+                Toast.makeText(DetailsActivity.this, R.string.quantity_increased, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            //else quantity increase is not possible
+            Toast.makeText(DetailsActivity.this, R.string.quantity_maximum_message, Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     //pressing the quantity decrease button triggers this
     private void decreaseQuantity() {
         int quantity = Integer.parseInt(mQuantityTextView.getText().toString());
@@ -141,15 +186,16 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         if (quantity > MINIMUM_ALLOWED_QUANTITY) {
             quantity--;
             String quantityChanged = String.valueOf(quantity);
-            if(quantityIsUpdated(quantityChanged)){
-                Toast.makeText(DetailsActivity.this,R.string.quantity_decreased, Toast.LENGTH_SHORT).show();
+            if (quantityIsUpdated(quantityChanged)) {
+                Toast.makeText(DetailsActivity.this, R.string.quantity_decreased, Toast.LENGTH_SHORT).show();
             }
         } else {
 //quantity decrease is not possible
-            Toast.makeText(DetailsActivity.this,R.string.quantity_minimum_message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(DetailsActivity.this, R.string.quantity_minimum_message, Toast.LENGTH_SHORT).show();
         }
 
     }
+
     //update the quantity and return result
     private boolean quantityIsUpdated(String updatedQuantity) {
         //////////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +208,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     Toast.LENGTH_SHORT).show();
             return false;
         }
-    return true;
+        return true;
     }
 
     private void showDeleteConfirmationDialog() {
@@ -190,6 +236,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
     private void deleteBook() {
 
         int rowsDeleted = 0;

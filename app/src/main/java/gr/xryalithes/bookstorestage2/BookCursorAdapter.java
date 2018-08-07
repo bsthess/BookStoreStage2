@@ -69,9 +69,9 @@ public class BookCursorAdapter extends CursorAdapter {
         //show the quantity
         quantityTextView.setText((bookQuantity));
 
-
 //setting the button for sale.
         Button sellButton = view.findViewById(R.id.sale_button);
+
         sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
